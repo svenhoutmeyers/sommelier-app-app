@@ -1,6 +1,14 @@
-<a href="#employees/<%= id %>">
-    <img src='pics/<%= firstName %>_<%= lastName %>.jpg'/>
-    <p><%= firstName %> <%= lastName %></p>
+<!-- 
+http://www.bennadel.com/blog/2411-Using-Underscore-js-Templates-To-Render-HTML-Partials.htm
+ -->
+<a href="#employees/<%= nid %>">
+    <% if (image_uri != 'undefined'){ %>
+      <img src='<%= image_uri %>'/>
+    <% } %>
     <p><%= title %></p>
-    <span class="chevron"></span><span class="count"><%= reports %></span>
+    <p><%= ptitle %> <%= type %></p>
+    <span class="chevron"></span>
+    <% if (amount != 'undefined'){ %>
+      <span class="count"><%= amount %></span>
+    <% } %>
 </a>

@@ -1,4 +1,4 @@
-## Employee Directory ##
+## Sommelier App ##
 
 ### Sample Application built with Backbone.js and TopCoat ###
 
