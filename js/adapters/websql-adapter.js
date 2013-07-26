@@ -5,6 +5,7 @@ app.adapters.wine = (function () {
     var db = window.openDatabase("Database", "1.0", "Cellar DB", 2000000);
     
     var siteurl = 'http://local.sommelierapp.com';
+    var mail = "sven.houtmeyers@telenet.be";
 
     db.transaction(
                 function(tx) {
@@ -12,11 +13,11 @@ app.adapters.wine = (function () {
                     addData(tx);
                 },
                 function(error) {
-                    //console.log('Transaction error: ' + error);
+                    console.log('Transaction error: ' + error);
                     deferred.reject('Transaction error: ' + error);
                 },
                 function() {
-                    //console.log('Transaction success');
+                    console.log('Transaction success');
                     deferred.resolve();
                 }
     );
@@ -175,7 +176,6 @@ app.adapters.wine = (function () {
     var addData = function(tx) {
 
         url = siteurl + "/sa/cellar/json/all";
-        mail = "sven.houtmeyers@telenet.be";
 
         $.getJSON(url + "?mail=" + mail + "&callback=?", function(data) {insertData(data);});
         
