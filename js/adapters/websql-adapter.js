@@ -1,4 +1,4 @@
-app.adapters.employee = (function () {
+app.adapters.wine = (function () {
 
         
     var deferred = $.Deferred();
@@ -66,14 +66,39 @@ app.adapters.employee = (function () {
         db.transaction(
             function(tx) {
 
-                var sql = "SELECT e.id, e.firstName, e.lastName, e.title, e.reports, e.city, e.officePhone, e.cellPhone, e.email, e.managerId, e.managerName, m.firstName managerFirstName, m.lastName managerLastName, count(r.id) reportCount " +
-                    "FROM employee e " +
-                    "LEFT JOIN employee r ON r.managerId = e.id " +
-                    "LEFT JOIN employee m ON e.managerId = m.id " +
-                    "WHERE e.id=:id";
+                var sql = "SELECT c.nid, c.title, c.amount, c.image_uri, c.price, c.year, c.type_tid, c.producer_nid, p.title as ptitle " +
+                    "FROM cellar c LEFT JOIN producers p ON c.producer_nid = p.nid " +
+                    "WHERE c.nid=:id";
 
                 tx.executeSql(sql, [id], function(tx, results) {
+                
+                    terms = JSON.parse(localStorage['terms']);
+                    results.rows.item(0).type = terms[results.rows.item(0).type_tid];
+
                     deferred.resolve(results.rows.length === 1 ? results.rows.item(0) : null);
+                });
+            },
+            function(error) {
+                deferred.reject("Transaction Error: " + error.message);
+            }
+        );
+        return deferred.promise();
+    };
+    
+    findProducerById = function(id) {
+        var deferred = $.Deferred();
+        
+        db.transaction(
+            function(tx) {
+
+                var sql = "SELECT p.nid, p.title, p.body, p.image_uri, p.type_domain, p.address, p.province_name, p.country_name, p.latitude, p.longitude, p.region_tids, p.hectares, p.cepages_tid, p.cepages_extra_tid, p.site_link, p.facebook_link, p.mail, p.phone " +
+                    "FROM producers p " +
+                    "WHERE p.nid=:id";
+
+                tx.executeSql(sql, [id], function(tx, results) {
+                
+                    deferred.resolve(results.rows.length === 1 ? results.rows.item(0) : null);
+                    
                 });
             },
             function(error) {
@@ -85,31 +110,7 @@ app.adapters.employee = (function () {
     
 
     var createTables = function(tx) {
-        tx.executeSql('DROP TABLE IF EXISTS employee');
-        var sql = "CREATE TABLE IF NOT EXISTS employee ( " +
-            "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-            "firstName VARCHAR(50), " +
-            "lastName VARCHAR(50), " +
-            "title VARCHAR(50), " +
-            "managerId INTEGER, " +
-            "managerName VARCHAR(50), " +
-            "reports INTEGER, " +
-            "department VARCHAR(50), " +
-            "city VARCHAR(50), " +
-            "pic VARCHAR(50), " +
-            "officePhone VARCHAR(50), " +
-            "cellPhone VARCHAR(50), " +
-            "twitterId VARCHAR(50), " +
-            "blog VARCHAR(50), " +
-            "email VARCHAR(50))";
-        tx.executeSql(sql, null,
-            function() {
-                //console.log('Create table success');
-            },
-            function(tx, error) {
-                alert('Create table error: ' + error.message);
-          });
-          
+                  
         tx.executeSql('DROP TABLE IF EXISTS cellar');
         var sql = "CREATE TABLE IF NOT EXISTS cellar ( " +
             "nid INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -242,6 +243,7 @@ app.adapters.employee = (function () {
     // The public API
     return {
         findById: findById,
+        findProducerById: findProducerById,
         findByName: findByName
         //findByManager: findByManager
     };

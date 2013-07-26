@@ -1,0 +1,29 @@
+<div class="topcoat-navigation-bar">
+    <div class="topcoat-navigation-bar__item left quarter">
+        <a class="topcoat-icon-button--quiet back-button" href="#">
+          <span class="topcoat-icon topcoat-icon--back"></span>
+        </a>
+    </div>
+    <div class="topcoat-navigation-bar__item center half">
+        <h1 class="topcoat-navigation-bar__title">Producer</h1>
+    </div>
+</div>
+
+<div class='details'>
+    <% if (image_uri) { %>
+      <img class='wine-image' src='<%= image_uri %>.jpg'/>
+    <% } %>
+    <h1><%= title %></h1>
+    <span class="location"></span>
+    <div class="topcoat-list__container scroller">
+        <ul class="topcoat-list list actions">
+            <% if (nid > 0) { %>
+            <li class="topcoat-list__item"><a href="#wines/<%= nid %>/reports"><p>View Direct Reports</p><p><%= nid %></p><div class="action-icon icon-reports"/></a></li>
+            <% } %>
+            <li class="topcoat-list__item"><a href="tel:<%= phone %>"><p>Call Cell</p><p><%= phone %></p><div class="action-icon icon-call"></div></a></li>
+            <li class="topcoat-list__item"><a href="#wines/<%= id %>/map"><p>Location</p><p><%= address %></p><div class="action-icon icon-location"></div></a></li>
+            <li class="topcoat-list__item"><a href="mailto:<%= mail %>"><p>Email</p><p><%= mail %></p><div class="action-icon icon-mail"></div></a></li>
+        </ul>
+    </div>
+</div>
+        

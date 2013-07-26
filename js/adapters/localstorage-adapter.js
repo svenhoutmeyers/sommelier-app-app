@@ -1,29 +1,29 @@
-app.adapters.employee = (function () {
+app.adapters.wine = (function () {
 
     console.log("Loading localstorage adapter module");
 
     var findById = function (id) {
 
             var deferred = $.Deferred(),
-                employees = JSON.parse(window.localStorage.getItem("employees")),
-                employee = null,
-                l = employees.length;
+                wines = JSON.parse(window.localStorage.getItem("wines")),
+                wine = null,
+                l = wines.length;
 
             for (var i = 0; i < l; i++) {
-                if (employees[i].id === id) {
-                    employee = employees[i];
+                if (wines[i].id === id) {
+                    wine = wines[i];
                     break;
                 }
             }
 
-            deferred.resolve(employee);
+            deferred.resolve(wine);
             return deferred.promise();
         },
 
         findByName = function (searchKey) {
             var deferred = $.Deferred(),
-                employees = JSON.parse(window.localStorage.getItem("employees")),
-                results = employees.filter(function (element) {
+                wines = JSON.parse(window.localStorage.getItem("wines")),
+                results = wines.filter(function (element) {
                     var fullName = element.firstName + " " + element.lastName;
                     return fullName.toLowerCase().indexOf(searchKey.toLowerCase()) > -1;
                 });
@@ -33,8 +33,8 @@ app.adapters.employee = (function () {
 
         findByManager = function (managerId) {
             var deferred = $.Deferred(),
-                employees = JSON.parse(window.localStorage.getItem("employees")),
-                results = employees.filter(function (element) {
+                wines = JSON.parse(window.localStorage.getItem("wines")),
+                results = wines.filter(function (element) {
                     return managerId === element.managerId;
                 });
             deferred.resolve(results);
@@ -43,7 +43,7 @@ app.adapters.employee = (function () {
 
 
     // Store sample data in Local Storage
-    window.localStorage.setItem("employees", JSON.stringify(
+    window.localStorage.setItem("wines", JSON.stringify(
         [
             {"id": 1, "firstName": "James", "lastName": "King", "managerId": 0, "managerName": "", "reports": 4, "title": "President and CEO", "department": "Corporate", "cellPhone": "617-000-0001", "officePhone": "781-000-0001", "email": "jking@fakemail.com", "city": "Boston, MA", "pic": "james_king.jpg", "twitterId": "@fakejking", "blog": "http://coenraets.org"},
             {"id": 2, "firstName": "Julie", "lastName": "Taylor", "managerId": 1, "managerName": "James King", "reports": 2, "title": "VP of Marketing", "department": "Marketing", "cellPhone": "617-000-0002", "officePhone": "781-000-0002", "email": "jtaylor@fakemail.com", "city": "Boston, MA", "pic": "julie_taylor.jpg", "twitterId": "@fakejtaylor", "blog": "http://coenraets.org"},

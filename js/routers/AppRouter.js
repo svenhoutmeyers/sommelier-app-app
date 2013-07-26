@@ -1,10 +1,11 @@
 app.routers.AppRouter = Backbone.Router.extend({
 
     routes: {
-        "":                         "home",
-        "employees/:id":            "employeeDetails",
-        "employees/:id/reports":    "reports",
-        "employees/:id/map":        "map"
+        "":                     "home",
+        "wines/:id":            "wineDetails",
+        "producers/:id":        "producerDetails",
+        "wines/:id/reports":    "reports",
+        "wines/:id/map":        "map"
     },
 
     initialize: function () {
@@ -24,22 +25,32 @@ app.routers.AppRouter = Backbone.Router.extend({
         app.slider.slidePage(app.homeView.$el);
     },
 
-    employeeDetails: function (id) {
-        var employee = new app.models.Employee({id: id});
-        employee.fetch({
+    wineDetails: function (id) {
+        var wine = new app.models.Wine({id: id});
+        wine.fetch({
             success: function (data) {
-                // Note that we could also 'recycle' the same instance of EmployeeFullView
+                // Note that we could also 'recycle' the same instance of WineFullView
                 // instead of creating new instances
-                app.slider.slidePage(new app.views.EmployeeView({model: data}).render().$el);
+                app.slider.slidePage(new app.views.WineView({model: data}).render().$el);
+            }
+        });
+    },
+    
+    producerDetails: function (id) {
+        var producer = new app.models.Producer({id: id});
+        
+        producer.fetch({
+            success: function (data) {
+                app.slider.slidePage(new app.views.ProducerView({model: data}).render().$el);
             }
         });
     },
 
     reports: function (id) {
-        var employee = new app.models.Employee({id: id});
-        employee.fetch({
+        var wine = new app.models.Wine({id: id});
+        wine.fetch({
             success: function (data) {
-                // Note that we could also 'recycle' the same instance of EmployeeFullView
+                // Note that we could also 'recycle' the same instance of WineFullView
                 // instead of creating new instances
                 app.slider.slidePage(new app.views.ReportsView({model: data}).render().$el);
             }

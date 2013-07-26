@@ -1,4 +1,4 @@
-app.views.EmployeeView = Backbone.View.extend({
+app.views.WineView = Backbone.View.extend({
 
     render: function () {
         this.$el.html(this.template(this.model.attributes));

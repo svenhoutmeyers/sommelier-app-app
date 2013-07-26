@@ -1,12 +1,18 @@
 <!-- 
 http://www.bennadel.com/blog/2411-Using-Underscore-js-Templates-To-Render-HTML-Partials.htm
  -->
-<a href="#employees/<%= nid %>">
+<a href="#wines/<%= nid %>">
     <% if (image_uri != 'undefined'){ %>
       <img src='<%= image_uri %>'/>
-    <% } %>
+    <% } else { %>
+        <% if (type_tid === 286){ %>
+          <img src='pics/default_rood.png'/>     
+      <% } else { %>
+          <img src='pics/default_wit.png'/>
+      <% }
+    } %>
     <p><%= title %></p>
-    <p><%= ptitle %> <%= type %></p>
+    <p><%= ptitle %></p>
     <span class="chevron"></span>
     <% if (amount != 'undefined'){ %>
       <span class="count"><%= amount %></span>
