@@ -11,6 +11,7 @@ app.adapters.wine = (function () {
                 function(tx) {
                     createTables(tx);
                     addData(tx);
+                    addTerms();
                 },
                 function(error) {
                     console.log('Transaction error: ' + error);
@@ -219,14 +220,6 @@ app.adapters.wine = (function () {
                                 });
                     }
                     
-                    // Terms > localStorage
-                    $.ajax({
-                         url : siteurl + "/sa/terms/json" + "?callback=?",
-                         dataType : "jsonp",
-                         success: function(data){
-                            localStorage['terms'] = JSON.stringify(data);
-                         }
-                    });
 
 
                 }
@@ -237,7 +230,19 @@ app.adapters.wine = (function () {
         
     
     }
-
+    
+    var addTerms = function(tx) {
+    
+        // Terms > localStorage
+        $.ajax({
+             url : siteurl + "/sa/terms/json" + "?callback=?",
+             dataType : "jsonp",
+             success: function(data){
+                localStorage['terms'] = JSON.stringify(data);
+                console.log('Terms imported');
+             }
+        });
+    }
     
     
     // The public API
