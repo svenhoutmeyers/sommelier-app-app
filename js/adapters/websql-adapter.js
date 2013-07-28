@@ -1,28 +1,10 @@
 app.adapters.wine = (function () {
 
-        
-    var deferred = $.Deferred();
     var db = window.openDatabase("Database", "1.0", "Cellar DB", 2000000);
     
     var siteurl = 'http://local.sommelierapp.com';
     var mail = "sven.houtmeyers@telenet.be";
 
-    db.transaction(
-                function(tx) {
-                    createTables(tx);
-                    addData(tx);
-                    addTerms();
-                },
-                function(error) {
-                    console.log('Transaction error: ' + error);
-                    deferred.reject('Transaction error: ' + error);
-                },
-                function() {
-                    console.log('Transaction success');
-                    deferred.resolve();
-                }
-    );
-    
     
     findByName = function(searchKey) {
         var deferred = $.Deferred();
@@ -60,7 +42,7 @@ app.adapters.wine = (function () {
             }
         );
         return deferred.promise();
-    },
+    };
     
 
     findById = function(id) {
@@ -111,7 +93,10 @@ app.adapters.wine = (function () {
     };
     
 
-    var createTables = function(tx) {
+    createTables = function(tx) {
+    
+    db.transaction(
+        function(tx) {
                   
         tx.executeSql('DROP TABLE IF EXISTS cellar');
         var sql = "CREATE TABLE IF NOT EXISTS cellar ( " +
@@ -171,14 +156,19 @@ app.adapters.wine = (function () {
                 alert('Create table error: ' + error.message);
           });
           
+        }
+        );
           
     }
 
-    var addData = function(tx) {
+    addData = function() {
+    
+    
+        var deferred = $.Deferred();
 
         url = siteurl + "/sa/cellar/json/all";
 
-        $.getJSON(url + "?mail=" + mail + "&callback=?", function(data) {insertData(data);});
+        $.getJSON(url + "?mail=" + mail + "&callback=?", function(data) {console.log('Json loaded');insertData(data);});
         
         function insertData(data) {
         
@@ -224,14 +214,14 @@ app.adapters.wine = (function () {
 
                 }
             );
-
+            deferred.resolve();
         }
 
-        
+        return deferred.promise();
     
     }
     
-    var addTerms = function(tx) {
+    addTerms = function() {
     
         // Terms > localStorage
         $.ajax({
@@ -244,13 +234,20 @@ app.adapters.wine = (function () {
         });
     }
     
+
+
+    $.when(createTables(),addData()).done(function(value) {
+        addTerms();
+        console.log('Data loaded');   
+    });
+
+    
     
     // The public API
     return {
         findById: findById,
         findProducerById: findProducerById,
         findByName: findByName
-        //findByManager: findByManager
     };
 
 }());    
