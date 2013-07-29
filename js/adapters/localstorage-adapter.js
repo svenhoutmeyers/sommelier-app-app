@@ -1,7 +1,5 @@
 app.adapters.wine = (function () {
 
-    console.log("Loading localstorage adapter module");
-
     var findById = function (id) {
 
             var deferred = $.Deferred(),

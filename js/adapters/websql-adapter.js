@@ -60,8 +60,17 @@ app.adapters.wine = (function () {
                 
                     terms = JSON.parse(localStorage['terms']);
                     results.rows.item(0).type = terms[results.rows.item(0).type_tid];
+                    
+                    if(results.rows.length === 0) {
+                        deferred.resolve(null);
+                    } else {
+                        wine = results.rows.item(0);
+                        terms = JSON.parse(localStorage['terms']);
+                        wine.type = terms[wine.type_tid];
+                        console.log(wine);
+                        deferred.resolve(wine);
+                    }    
 
-                    deferred.resolve(results.rows.length === 1 ? results.rows.item(0) : null);
                 });
             },
             function(error) {
@@ -170,10 +179,14 @@ app.adapters.wine = (function () {
 
         url = siteurl + "/sa/cellar/json/all";
 
-        $.getJSON(url + "?mail=" + mail + "&callback=?", function(data) {console.log('Json loaded');insertData(data);})
+        $.getJSON(url + "?mail=" + mail + "&callback=?", function(data) {console.log('Json loaded');insertData(data);});
+        
+        /*
             .success(function() { alert("success"); })
             .error(function() { alert("error"); })
-            .complete(function() { alert("complete"); });
+            .complete(function() { alert("complete"); })
+
+        */
         
         function insertData(data) {
         

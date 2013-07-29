@@ -11,7 +11,11 @@ http://www.bennadel.com/blog/2411-Using-Underscore-js-Templates-To-Render-HTML-P
           <img src='pics/default_wit.png'/>
       <% }
     } %>
-    <p><%= title %></p>
+    <p><%= title %> 
+      <% if (year != 'undefined'){ %>
+        <%= year %>
+      <% } %>
+    </p>
     <p><%= ptitle %></p>
     <span class="chevron"></span>
     <% if (amount != 'undefined'){ %>
