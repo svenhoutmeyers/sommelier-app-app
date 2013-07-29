@@ -1,7 +1,5 @@
 app.adapters.wine = (function () {
 
-    console.log('starting app.adapters');
-
     var db = window.openDatabase("Database", "1.0", "Cellar DB", 2000000);
     
     var siteurl = 'http://www.sommelierapp.com';
@@ -67,7 +65,6 @@ app.adapters.wine = (function () {
                         wine = results.rows.item(0);
                         terms = JSON.parse(localStorage['terms']);
                         wine.type = terms[wine.type_tid];
-                        console.log(wine);
                         deferred.resolve(wine);
                     }    
 
@@ -132,7 +129,7 @@ app.adapters.wine = (function () {
             "drink_tid INTEGER)";
         tx.executeSql(sql, null,
             function() {
-                console.log('Create table success');
+                //console.log('Create table success');
             },
             function(tx, error) {
                 alert('Create table error: ' + error.message);
@@ -161,7 +158,7 @@ app.adapters.wine = (function () {
             "phone VARCHAR(100))";
         tx.executeSql(sql, null,
             function() {
-                console.log('Create table success');
+                //console.log('Create table success');
             },
             function(tx, error) {
                 alert('Create table error: ' + error.message);
@@ -179,7 +176,7 @@ app.adapters.wine = (function () {
 
         url = siteurl + "/sa/cellar/json/all";
 
-        $.getJSON(url + "?mail=" + mail + "&callback=?", function(data) {console.log('Json loaded');insertData(data);});
+        $.getJSON(url + "?mail=" + mail + "&callback=?", function(data) {insertData(data);});
         
         /*
             .success(function() { alert("success"); })
