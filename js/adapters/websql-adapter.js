@@ -54,6 +54,8 @@ app.adapters.wine = (function () {
                     "FROM cellar c LEFT JOIN producers p ON c.producer_nid = p.nid " +
                     "WHERE c.nid=:id";
 
+                console.log(id);
+                
                 tx.executeSql(sql, [id], function(tx, results) {
                  
                     if(results.rows.length === 0) {
