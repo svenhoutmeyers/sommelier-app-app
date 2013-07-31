@@ -58,7 +58,13 @@ app.routers.AppRouter = Backbone.Router.extend({
     },
 
     map: function (id) {
-        app.slider.slidePage(new app.views.MapView().render().$el);
+        var producer = new app.models.Producer({id: id});
+        producer.fetch({
+            success: function (data) {
+                app.slider.slidePage(new app.views.MapView({model: data}).render().$el);
+            }
+        });
+        
     }
 
 });

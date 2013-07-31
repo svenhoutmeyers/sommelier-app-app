@@ -50,21 +50,36 @@ app.adapters.wine = (function () {
         db.transaction(
             function(tx) {
 
-                var sql = "SELECT c.nid, c.title, c.amount, c.image_uri, c.price, c.year, c.type_tid, c.producer_nid, p.title as ptitle " +
+                var sql = "SELECT c.nid, c.title, c.body, c.amount, c.image_uri, c.price, c.year, c.type_tid, c.producer_nid, c.appelation, c.appelation_info, c.cepages_tids, c.cepages_info, c.cellartracker_link, c.alcohol, c.region_tids, c.region_weight, c. drink_tid, p.title as ptitle " +
                     "FROM cellar c LEFT JOIN producers p ON c.producer_nid = p.nid " +
                     "WHERE c.nid=:id";
 
                 tx.executeSql(sql, [id], function(tx, results) {
-                
-                    terms = JSON.parse(localStorage['terms']);
-                    results.rows.item(0).type = terms[results.rows.item(0).type_tid];
-                    
+                 
                     if(results.rows.length === 0) {
                         deferred.resolve(null);
                     } else {
                         wine = results.rows.item(0);
                         terms = JSON.parse(localStorage['terms']);
+                        // Type
                         wine.type = terms[wine.type_tid];
+                        // Regions
+                        var region_tids = wine.region_tids.split(";");
+                        var regions = new Array();
+                        region_tids.forEach(function(region_tid) {
+                          regions.push(terms[region_tid]);
+                        });
+                        wine.regions = regions.join(', ');
+                        // Cepages
+                        var cepages_tids = wine.cepages_tids.split(";");
+                        var cepages = new Array();
+                        cepages_tids.forEach(function(cepage_tid) {
+                          cepages.push(terms[cepage_tid]);
+                        });
+                        wine.cepages = cepages.join(', ');
+                        // Drink in
+                        wine.drink = terms[wine.drink_tid];
+                        
                         deferred.resolve(wine);
                     }    
 
@@ -83,13 +98,35 @@ app.adapters.wine = (function () {
         db.transaction(
             function(tx) {
 
-                var sql = "SELECT p.nid, p.title, p.body, p.image_uri, p.type_domain, p.address, p.province_name, p.country_name, p.latitude, p.longitude, p.region_tids, p.hectares, p.cepages_tid, p.cepages_extra_tid, p.site_link, p.facebook_link, p.mail, p.phone " +
+                var sql = "SELECT p.nid, p.title, p.body, p.image_uri, p.type_domain, p.address, p.province_name, p.country_name, p.latitude, p.longitude, p.region_tids, p.hectares, p.cepages_tid, p.cepages_extra_tids, p.site_link, p.facebook_link, p.mail, p.phone " +
                     "FROM producers p " +
                     "WHERE p.nid=:id";
 
                 tx.executeSql(sql, [id], function(tx, results) {
                 
-                    deferred.resolve(results.rows.length === 1 ? results.rows.item(0) : null);
+                    if(results.rows.length === 0) {
+                        deferred.resolve(null);
+                    } else {
+                        producer = results.rows.item(0);
+                        terms = JSON.parse(localStorage['terms']);
+                        // Regions
+                        var region_tids = producer.region_tids.split(";");
+                        var regions = new Array();
+                        region_tids.forEach(function(region_tid) {
+                          regions.push(terms[region_tid]);
+                        });
+                        producer.regions = regions.join(', ');
+                        // Main cepage
+                        producer.cepage = terms[producer.cepages_tid];
+                        // Cepages_extra
+                        var cepages_extra_tids = producer.cepages_extra_tids.split(";");
+                        var cepages_extra = new Array();
+                        cepages_extra_tids.forEach(function(cepages_extra_tid) {
+                          cepages_extra.push(terms[cepages_extra_tid]);
+                        });
+                        producer.cepages_extra = cepages_extra.join(', ');
+                        deferred.resolve(producer);
+                    } 
                     
                 });
             },
@@ -115,7 +152,7 @@ app.adapters.wine = (function () {
             "amount INTEGER, " +
             "appelation VARCHAR(50), " +
             "appelation_info VARCHAR(50), " +
-            "cepages_tid INTEGER, " +
+            "cepages_tids INTEGER, " +
             "cepages_info VARCHAR(50), " +
             "image_uri VARCHAR(100), " +
             "cellartracker_link VARCHAR(100), " +
@@ -151,7 +188,7 @@ app.adapters.wine = (function () {
             "region_tids VARCHAR(50), " +
             "hectares VARCHAR(50), " +
             "cepages_tid INTEGER, " +
-            "cepages_extra_tid INTEGER, " +
+            "cepages_extra_tids INTEGER, " +
             "site_link VARCHAR(100), " +
             "facebook_link VARCHAR(100), " +
             "mail VARCHAR(100), " +
@@ -192,13 +229,13 @@ app.adapters.wine = (function () {
     
                     // Cellar > websql
                     var l = data.cellar.results.length;
-                    var sql = 'INSERT  OR REPLACE INTO CELLAR (nid, title, body, producer_nid, amount, appelation, appelation_info, cepages_tid, cepages_info, image_uri, cellartracker_link, year, type_tid, price, price_tid, region_tids, region_weight, alcohol, drink_tid) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)';
+                    var sql = 'INSERT  OR REPLACE INTO CELLAR (nid, title, body, producer_nid, amount, appelation, appelation_info, cepages_tids, cepages_info, image_uri, cellartracker_link, year, type_tid, price, price_tid, region_tids, region_weight, alcohol, drink_tid) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)';
                     
                     var c;
                     for (var i = 0; i < l; i++) {
                         c = data.cellar.results[i];
                         
-                        tx.executeSql(sql, [c.nid, c.title, c.body, c.producer_nid, c.amount, c.appelation, c.appelation_info, c.cepages_tid, c.cepages_info, c.image_uri, c.cellartracker_link, c.year, c.type_tid, c.price, c.price_tid, c.region_tids, c.region_weight, c.alcohol, c.drink_tid],
+                        tx.executeSql(sql, [c.nid, c.title, c.body, c.producer_nid, c.amount, c.appelation, c.appelation_info, c.cepages_tids, c.cepages_info, c.image_uri, c.cellartracker_link, c.year, c.type_tid, c.price, c.price_tid, c.region_tids, c.region_weight, c.alcohol, c.drink_tid],
                                 function() {
                                     console.log('INSERT cellar item success');
                                 },
@@ -210,13 +247,13 @@ app.adapters.wine = (function () {
                     
                     // Producers > websql
                     var l = data.producers.results.length;
-                    var sql = 'INSERT INTO PRODUCERS (nid, title, body, image_uri, type_domain, address, province_name, country_name, country, latitude, longitude, region_tids, hectares, cepages_tid, cepages_extra_tid, site_link, facebook_link, mail, phone) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)';
+                    var sql = 'INSERT INTO PRODUCERS (nid, title, body, image_uri, type_domain, address, province_name, country_name, country, latitude, longitude, region_tids, hectares, cepages_tid, cepages_extra_tids, site_link, facebook_link, mail, phone) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)';
                     
                     var c;
                     for (var i = 0; i < l; i++) {
                         p = data.producers.results[i];
                         
-                        tx.executeSql(sql, [p.nid, p.title, p.body, p.image_uri, p.type_domain, p.address, p.province_name, p.country_name, p.country, p.latitude, p.longitude, p.region_tids, p.hectares, p.cepages_tid, p.cepages_extra_tid, p.site_link, p.facebook_link, p.mail, p.phone],
+                        tx.executeSql(sql, [p.nid, p.title, p.body, p.image_uri, p.type_domain, p.address, p.province_name, p.country_name, p.country, p.latitude, p.longitude, p.region_tids, p.hectares, p.cepages_tid, p.cepages_extra_tids, p.site_link, p.facebook_link, p.mail, p.phone],
                                 function() {
                                     console.log('INSERT producers item success');
                                 },

@@ -11,7 +11,7 @@
 
 <div class='details'>
     <% if (image_uri != 'undefined'){ %>
-      <img class='wine-image' src='<%= image_uri %>.jpg'/>
+      <img class='wine-image' src='<%= image_uri %>'/>
     <% } %>
     <h1>
       <%= title %>
@@ -24,15 +24,60 @@
     <span class="location"></span>
     <div class="topcoat-list__container scroller">
         <ul class="topcoat-list list actions">
-            <% if (producer_nid) { %>
-            <li class="topcoat-list__item"><a href="#producers/<%= producer_nid %>"><p>View Producer</p><p><%= ptitle %></p><div class="action-icon icon-manager"/></a></li>
-            <% } %>
-            <li>
-              <% if (amount != 'undefined'){ %>
-                <%= amount %>
-              <% } %>
+            <% if (amount != 'undefined'){ %>
+              <li class="topcoat-list__item">
+                <p>Amount: <%= amount %></p>
             </li>
+            <% } %>
+            <% if (price != 'undefined'){ %>
+              <li class="topcoat-list__item">
+                <p>Price: <%= price %> €</p>
+            </li>
+            <% } %>
+            <% if (drink != undefined){ %>
+              <li class="topcoat-list__item">
+                <p>Drink in: <%= drink %></p>
+            </li>
+            <% } %>
+            <% if (regions != ''){ %>
+              <li class="topcoat-list__item">
+                <p>Regions: <%= regions %></p>
+            </li>
+            <% } %>
+            <% if (cepages != ''){ %>
+              <li class="topcoat-list__item">
+                <p>Cepages: <%= cepages %></p>
+                <% if (cepages_info != 'undefined'){ %>
+                  <%= cepages_info %>
+                <% } %>
+            </li>
+            <% } %>
+            <% if (appelation != 'undefined'){ %>
+              <li class="topcoat-list__item">
+                <p>Appelation: <%= appelation %></p>
+                <% if (appelation_info != 'undefined'){ %>
+                  <%= appelation_info %>
+                <% } %>
+            </li>
+            <% } %>
+            <% if (alcohol != 'undefined'){ %>
+              <li class="topcoat-list__item">
+                <p>Alcohol: <%= price %>%</p>
+            </li>
+            <% } %>
+            <% if (producer_nid) { %>
+            <li class="topcoat-list__item"><a href="#producers/<%= producer_nid %>"><p>View producer</p><p><%= ptitle %></p><div class="action-icon icon-manager"/></a></li>
+            <% } %>
+            <% if (cellartracker_link != 'undefined') { %>
+            <li class="topcoat-list__item"><a href="<%= cellartracker_link %>" target="_blank"><p>View wine on </p><p>Cellartracker</p><div class="action-icon icon-manager"/></a></li>
+            <% } %>
+            <% if (body != 'undefined'){ %>
+              <li class="topcoat-list__item">
+                <p>Notities</p>
+                <%= body %>
+            </li>
+            <% } %>
+            
         </ul>
     </div>
-</div>
-        
+</div>  

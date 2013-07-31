@@ -10,20 +10,53 @@
 </div>
 
 <div class='details'>
-    <% if (image_uri) { %>
-      <img class='wine-image' src='<%= image_uri %>.jpg'/>
+    <% if (image_uri != 'undefined'){ %>
+      <img class='wine-image' src='<%= image_uri %>'/>
     <% } %>
     <h1><%= title %></h1>
+    <p><%= type_domain %></p>
+    <% if (regions != ''){ %>
+        <p><%= regions %></p>
+    <% } %>
+    <p><%= country_name %></p>
     <span class="location"></span>
     <div class="topcoat-list__container scroller">
         <ul class="topcoat-list list actions">
-            <% if (nid > 0) { %>
-            <li class="topcoat-list__item"><a href="#wines/<%= nid %>/reports"><p>View Direct Reports</p><p><%= nid %></p><div class="action-icon icon-reports"/></a></li>
+            <% if (cepage != ''){ %>
+              <li class="topcoat-list__item">
+                <p>Main cepage: <%= cepage %></p>
+                <% if (cepages_extra != 'undefined'){ %>
+                  Other: <%= cepages_extra %>
+                <% } %>
+            </li>
             <% } %>
-            <li class="topcoat-list__item"><a href="tel:<%= phone %>"><p>Call Cell</p><p><%= phone %></p><div class="action-icon icon-call"></div></a></li>
-            <li class="topcoat-list__item"><a href="#wines/<%= id %>/map"><p>Location</p><p><%= address %></p><div class="action-icon icon-location"></div></a></li>
-            <li class="topcoat-list__item"><a href="mailto:<%= mail %>"><p>Email</p><p><%= mail %></p><div class="action-icon icon-mail"></div></a></li>
+            <% if (hectares != 'undefined'){ %>
+              <li class="topcoat-list__item">
+                <p>Size: <%= hectares %> ha.</p>
+            </li>
+            <% } %>
+            <% if (address != 'undefined'){ %>
+              <li class="topcoat-list__item"><a href="#wines/<%= nid %>/map"><p>Location</p><p><%= address %></p><div class="action-icon icon-location"></div></a></li>
+            <% } %>
+            <% if (site_link != 'undefined'){ %>
+              <li class="topcoat-list__item"><a href="<%= site_link %>" target="_blank"><p>Site</p><p><%= site_link %></p><div class="action-icon icon-next"></div></a></li>
+            <% } %>
+            <% if (facebook_link != 'undefined'){ %>
+              <li class="topcoat-list__item"><a href="<%= facebook_link %>" target="_blank"><p>Facebook page</p><p><%= facebook_link %></p><div class="action-icon icon-next"></div></a></li>
+            <% } %>
+            <% if (mail != 'undefined'){ %>
+              <li class="topcoat-list__item"><a href="mailto:<%= mail %>" target="_blank"><p>Mail</p><p><%= mail %></p><div class="action-icon icon-mail"></div></a></li>
+            <% } %>
+            <% if (phone != 'undefined'){ %>
+              <li class="topcoat-list__item"><a href="tel:<%= phone %>"><p>Call</p><p><%= phone %></p><div class="action-icon icon-call"></div></a></li>
+            <% } %>
+            <% if (body != 'undefined'){ %>
+              <li class="topcoat-list__item">
+                <p>Notities</p>
+                <%= body %>
+            </li>
+            <% } %>
+            
         </ul>
     </div>
-</div>
-        
+</div>  
