@@ -2,7 +2,7 @@ app.adapters.wine = (function () {
 
     var db = window.openDatabase("Database", "1.0", "Cellar DB", 5 * 1024 * 1024);
     
-    var siteurl = 'http://www.sommelierapp.com';
+    var siteurl = 'http://local.sommelierapp.com';
     var mail = "sven.houtmeyers@telenet.be";
 
     
@@ -62,23 +62,43 @@ app.adapters.wine = (function () {
                         wine = results.rows.item(0);
                         terms = JSON.parse(localStorage['terms']);
                         // Type
-                        wine.type = terms[wine.type_tid];
+                        if(!$.isEmptyObject(wine.type_tid)) {
+                          wine.type = terms[wine.type_tid];
+                        } 
+                        else {
+                          wine.type = '';
+                        }
                         // Regions
-                        var region_tids = wine.region_tids.split(";");
-                        var regions = new Array();
-                        region_tids.forEach(function(region_tid) {
-                          regions.push(terms[region_tid]);
-                        });
-                        wine.regions = regions.join(', ');
+                        if(!$.isEmptyObject(wine.region_tids)) {
+                          var region_tids = wine.region_tids.split(";");
+                          var regions = new Array();
+                          region_tids.forEach(function(region_tid) {
+                            regions.push(terms[region_tid]);
+                          });
+                          wine.regions = regions.join(', ');
+                        } 
+                        else {
+                          wine.regions = '';
+                        }  
                         // Cepages
-                        var cepages_tids = wine.cepages_tids.split(";");
-                        var cepages = new Array();
-                        cepages_tids.forEach(function(cepage_tid) {
-                          cepages.push(terms[cepage_tid]);
-                        });
-                        wine.cepages = cepages.join(', ');
+                        if(!$.isEmptyObject(wine.cepages_tids)) {
+                          var cepages_tids = wine.cepages_tids.split(";");
+                          var cepages = new Array();
+                          cepages_tids.forEach(function(cepage_tid) {
+                            cepages.push(terms[cepage_tid]);
+                          });
+                          wine.cepages = cepages.join(', ');
+                        } 
+                        else {
+                          wine.cepages = '';
+                        }
                         // Drink in
-                        wine.drink = terms[wine.drink_tid];
+                        if(!$.isEmptyObject(wine.drink_tid)) {
+                          wine.drink = terms[wine.drink_tid];
+                        } 
+                        else {
+                          wine.drink = '';
+                        } 
                         
                         deferred.resolve(wine);
                     }    
@@ -110,21 +130,36 @@ app.adapters.wine = (function () {
                         producer = results.rows.item(0);
                         terms = JSON.parse(localStorage['terms']);
                         // Regions
-                        var region_tids = producer.region_tids.split(";");
-                        var regions = new Array();
-                        region_tids.forEach(function(region_tid) {
-                          regions.push(terms[region_tid]);
-                        });
-                        producer.regions = regions.join(', ');
+                        if(!$.isEmptyObject(producer.region_tids)) {
+                          var region_tids = producer.region_tids.split(";");
+                          var regions = new Array();
+                          region_tids.forEach(function(region_tid) {
+                            regions.push(terms[region_tid]);
+                          });
+                          producer.regions = regions.join(', ');
+                        } 
+                        else {
+                          producer.regions = '';
+                        } 
                         // Main cepage
-                        producer.cepage = terms[producer.cepages_tid];
+                        if(!$.isEmptyObject(producer.cepages_tid)) {
+                          producer.cepage = terms[producer.cepages_tid];
+                        } 
+                        else {
+                          producer.cepage = '';
+                        }
                         // Cepages_extra
-                        var cepages_extra_tids = producer.cepages_extra_tids.split(";");
-                        var cepages_extra = new Array();
-                        cepages_extra_tids.forEach(function(cepages_extra_tid) {
-                          cepages_extra.push(terms[cepages_extra_tid]);
-                        });
-                        producer.cepages_extra = cepages_extra.join(', ');
+                        if(!$.isEmptyObject(producer.cepages_extra_tids)) {
+                          var cepages_extra_tids = producer.cepages_extra_tids.split(";");
+                          var cepages_extra = new Array();
+                          cepages_extra_tids.forEach(function(cepages_extra_tid) {
+                            cepages_extra.push(terms[cepages_extra_tid]);
+                          });
+                          producer.cepages_extra = cepages_extra.join(', ');
+                        }
+                        else {
+                          producer.cepages_extra = '';
+                        } 
                         deferred.resolve(producer);
                     } 
                     
