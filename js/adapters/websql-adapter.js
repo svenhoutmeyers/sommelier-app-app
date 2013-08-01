@@ -2,7 +2,7 @@ app.adapters.wine = (function () {
 
     var db = window.openDatabase("Database", "1.0", "Cellar DB", 5 * 1024 * 1024);
     
-    var siteurl = 'http://local.sommelierapp.com';
+    var siteurl = 'http://www.sommelierapp.com';
     var mail = "sven.houtmeyers@telenet.be";
 
     
